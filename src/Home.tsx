@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { Todo } from './Todo';
 
 const apiUrl = 'https://jsonplaceholder.typicode.com/todos';
-const localStorageKey = 'todos';
 const itemsPerPage = 10; 
 const maxItems = 200; 
 
@@ -28,7 +27,7 @@ const Home: React.FC = () => {
         },
       });
       setTodos(response.data);
-      // Calculate total pages based on the maximum number of items
+     
       const totalItems = Math.min(response.headers['x-total-count'], maxItems);
       setTotalPages(Math.ceil(totalItems / itemsPerPage));
     } catch (error) {
