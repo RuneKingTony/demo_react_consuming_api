@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useTodoContext } from '../TodoContext';
+import { useTodoContext } from './TodoContext';
 
 const Home: React.FC = () => {
   const { todos, addTodo, updateTodo, deleteTodo, totalPages, currentPage, setCurrentPage } = useTodoContext();

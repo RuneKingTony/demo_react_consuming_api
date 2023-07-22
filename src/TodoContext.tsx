@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { Todo } from './components/Todo';
+import { Todo } from './Todo';
 
 const apiUrl = 'https://jsonplaceholder.typicode.com/todos'
 const itemsPerPage = 5;
