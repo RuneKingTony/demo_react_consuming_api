@@ -4,8 +4,8 @@ import { Todo } from './Todo';
 
 const apiUrl = 'https://jsonplaceholder.typicode.com/todos';
 const localStorageKey = 'todos';
-const itemsPerPage = 10; 
-const maxItems = 200; 
+const itemsPerPage = 5; 
+const maxItems = 20; 
 
 const Home: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -17,7 +17,10 @@ const Home: React.FC = () => {
     fetchTodos();
   }, [page]);
 
+  useEffect(() => {
   
+    localStorage.setItem(localStorageKey, JSON.stringify(todos));
+  }, [todos]);
 
   const fetchTodos = async () => {
     try {
@@ -28,7 +31,7 @@ const Home: React.FC = () => {
         },
       });
       setTodos(response.data);
-      // Calculate total pages based on the maximum number of items
+     
       const totalItems = Math.min(response.headers['x-total-count'], maxItems);
       setTotalPages(Math.ceil(totalItems / itemsPerPage));
     } catch (error) {
@@ -92,6 +95,9 @@ const Home: React.FC = () => {
       pageNumbers.push(
         <button
           key={i}
+          className={`px-3 py-1 mr-3 mt-2 mx-1 ${
+            page === i ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
+          } rounded`}
           onClick={() => handlePageChange(i)}
           disabled={page === i}
         >
@@ -103,51 +109,81 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div>
-      <h1>Todo Demo</h1>
-      <form onSubmit={addTodo}>
-        <input
-          type="text"
-          value={todoText}
-          onChange={(e) => setTodoText(e.target.value)}
-          placeholder="Add new todo..."
-          required
-        />
-        <button type="submit">Add</button>
-      </form>
-      <ul>
-        {todos.map((todo) => (
-          <li key={todo.id}>
-            <input
-              type="checkbox"
-              checked={todo.completed}
-              onChange={() => updateTodo(todo.id, todo.completed)}
-            />
-            <span
-              style={{
-                textDecoration: todo.completed ? 'line-through' : 'none',
-              }}
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md">
+        <h1 className="text-3xl font-semibold mb-4 text-center">Todo App</h1>
+        <form
+          className="flex items-center"
+          onSubmit={addTodo}
+        >
+          <input
+            className="flex-grow border border-gray-300 rounded-l py-2 px-4 focus:outline-none"
+            type="text"
+            value={todoText}
+            onChange={(e) => setTodoText(e.target.value)}
+            placeholder="Add new todo..."
+            required
+          />
+          <button
+            className="bg-blue-500 text-white px-4 py-2 rounded-r focus:outline-none hover:bg-blue-600"
+            type="submit"
+          >
+            Add
+          </button>
+        </form>
+        <ul className="mt-4">
+          {todos.map((todo) => (
+            <li
+              key={todo.id}
+              className={`flex items-center justify-between py-2 border-b border-gray-300 ${
+                todo.completed ? 'text-gray-400' : ''
+              }`}
             >
-              {todo.title}
-            </span>
-            <button onClick={() => deleteTodo(todo.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
-      <div>
-        <button
-          onClick={() => handlePageChange(page - 1)}
-          disabled={page === 1}
-        >
-          Previous Page
-        </button>
-        {renderPageNumbers()}
-        <button
-          onClick={() => handlePageChange(page + 1)}
-          disabled={page === totalPages}
-        >
-          Next Page
-        </button>
+              <div className="flex items-center">
+                <input
+                  className="mr-3 h-5 w-5 rounded border border-gray-400 focus:outline-none"
+                  type="checkbox"
+                  checked={todo.completed}
+                  onChange={() => updateTodo(todo.id, todo.completed)}
+                />
+                <span
+                  className={todo.completed ? 'line-through' : ''}
+                >
+                  {todo.title}
+                </span>
+              </div>
+              <button
+                className="bg-red-500 text-white px-2 py-1 rounded focus:outline-none hover:bg-red-600"
+                onClick={() => deleteTodo(todo.id)}
+              >
+                Delete
+              </button>
+            </li>
+          ))}
+        </ul>
+        <div className="mt-6 flex justify-center flex-wrap ">
+          <button
+            className={`bg-blue-500 text-white px-2 py-2 rounded mr-2 ${
+              page === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'
+            }`}
+            onClick={() => handlePageChange(page - 1)}
+            disabled={page === 1}
+          >
+            Previous
+          </button>
+          {renderPageNumbers()}
+          <button
+            className={`bg-blue-500 text-white px-4 py-2 rounded ml-2 ${
+              page === totalPages
+                ? 'opacity-50 cursor-not-allowed'
+                : 'hover:bg-blue-600'
+            }`}
+            onClick={() => handlePageChange(page + 1)}
+            disabled={page === totalPages}
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );
