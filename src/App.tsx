@@ -1,12 +1,13 @@
-import React from 'react';
-
 import './App.css';
 import Home from './components/Home';
+import { TodoProvider } from './TodoContext';
 
 function App() {
   return (
-   
-     <Home/>
+   <TodoProvider>
+    <Home/>
+   </TodoProvider>
+    
     
   );
 }
